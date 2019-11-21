@@ -11,7 +11,7 @@
 
 #define LARGURA_TELA 600
 #define ALTURA_TELA 600
-#define SIZE 5
+#define SIZE 5	
 
 void error_msg(char* text)
 {
