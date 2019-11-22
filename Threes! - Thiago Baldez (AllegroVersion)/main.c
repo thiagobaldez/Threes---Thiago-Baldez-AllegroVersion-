@@ -187,7 +187,7 @@ bool moveDown(int* matrix, bool test) // Check This!
 			offset = i * SIZE + j;
 			belowLine = offset + SIZE;
 
-			if (i == (SIZE - 1)) // ELE CAI ALGUMA VEZ AQUI?
+			if (i == (SIZE - 2)) // ELE CAI ALGUMA VEZ AQUI?
 			{
 				if ((matrix)[offset] != -1)
 				{
