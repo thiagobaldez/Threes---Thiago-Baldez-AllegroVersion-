@@ -13,6 +13,12 @@
 #define ALTURA_TELA 600
 #define SIZE 5	
 
+typedef struct
+{
+	char name[10];
+	int score, highScore;
+} Player;
+
 void error_msg(char* text)
 {
 	al_show_native_message_box(NULL, "ERRO",
@@ -602,6 +608,11 @@ int generateNextNumber(int* matrix)
 	return nextNumber;
 }
 
+void loginScreen()
+{
+	al_clear_to_color(al_map_rgb(255, 255, 255));
+}
+
 int main(void)
 {
 	int* gameboard = NULL;
@@ -609,6 +620,8 @@ int main(void)
 	ALLEGRO_DISPLAY* display = NULL;
 	ALLEGRO_FONT* font = NULL;
 	ALLEGRO_EVENT event;
+	/*Player player, *auxPtr = NULL;
+	auxPtr = player;*/
 
 
 	if (!al_init())
@@ -656,6 +669,15 @@ int main(void)
 		error_msg("Falha ao carregar a Matriz do Jogo.");
 		return -1;
 	}
+
+	/*loginDisplay = al_create_display((LARGURA_TELA/2), (ALTURA_TELA/4) * 2);
+	if (!loginDisplay)
+	{
+		error_msg("Falha ao criar janela");
+		return -1;
+	}*/
+
+	void loginScreen();
 
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
