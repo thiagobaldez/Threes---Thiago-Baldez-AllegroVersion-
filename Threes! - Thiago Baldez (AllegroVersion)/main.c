@@ -620,8 +620,8 @@ int main(void)
 	ALLEGRO_DISPLAY* display = NULL;
 	ALLEGRO_FONT* font = NULL;
 	ALLEGRO_EVENT event;
-	/*Player player, *auxPtr = NULL;
-	auxPtr = player;*/
+	Player player, *playerPtr = NULL;
+	playerPtr = &player;
 
 
 	if (!al_init())
