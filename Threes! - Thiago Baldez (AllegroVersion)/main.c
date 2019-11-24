@@ -608,9 +608,65 @@ int generateNextNumber(int* matrix)
 	return nextNumber;
 }
 
-void loginScreen()
+void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 {
-	al_clear_to_color(al_map_rgb(255, 255, 255));
+	ALLEGRO_EVENT event;
+	int namecont = 0;
+	int i;
+
+	ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
+
+	ALLEGRO_FONT* fonte = al_load_font("arial.ttf", 48, 0);
+
+	al_register_event_source(event_queue, al_get_mouse_event_source());
+	al_register_event_source(event_queue, al_get_keyboard_event_source());
+	al_register_event_source(event_queue, al_get_display_event_source(display));
+
+	al_clear_to_color(al_map_rgb(255, 255, 0));
+	al_flip_display();
+
+
+	do {
+
+		al_flip_display();
+		al_wait_for_event(event_queue, &event);
+
+		fflush(stdin);
+
+		if (event.type == ALLEGRO_EVENT_KEY_CHAR) 
+		{
+			for (i = ALLEGRO_KEY_A; i < ALLEGRO_KEY_Z; i++)
+			{
+				if (event.keyboard.keycode == i)
+				{
+					al_clear_to_color(al_map_rgb(255, 255, 0));
+					namecont++;
+					char *pressedKey =  al_keycode_to_name(i);
+					al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA/2, ALTURA_TELA/2, ALLEGRO_ALIGN_CENTRE, "%c", *pressedKey);
+					al_flip_display();
+					break;
+				}
+			}
+
+
+			/*switch (event.keyboard.keycode) {
+			case ALLEGRO_KEY_ENTER:
+				al_clear_to_color(al_map_rgb(0, 0, 255));
+				break;
+			case ALLEGRO_KEY_BACKSPACE:
+				al_clear_to_color(al_map_rgb(255, 0, 0));
+				break;
+			case ALLEGRO_KEY_DELETE:
+				al_clear_to_color(al_map_rgb(255, 255, 0));
+				break;
+			default:
+				al_clear_to_color(al_map_rgb(255, 0, 255));
+				break;
+			}*/
+		}
+
+	} while (namecont < 10);
+
 }
 
 int main(void)
@@ -677,7 +733,7 @@ int main(void)
 		return -1;
 	}*/
 
-	void loginScreen();
+	loginScreen(playerPtr, display);
 
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
