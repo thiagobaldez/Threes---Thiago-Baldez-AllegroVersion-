@@ -70,7 +70,7 @@ int* createMatrix()
 	return gameboard;
 }
 
-void UpdateMatrix(int* matrix, int* nextNumber, Player* playerPtr)
+void updateScreen(int* matrix, int* nextNumber, Player* playerPtr)
 {
 	int i, j;
 	ALLEGRO_FONT* fonte = al_load_font("arial.ttf", 42, 0);
@@ -620,7 +620,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 {
 	ALLEGRO_EVENT event;
 	int namecont = 0, i;
-	char j = 0, name[10], *aux = NULL, *pressedkey = NULL;
+	char j = 0, name[11], *aux = NULL, *pressedkey = NULL;
 	bool leave = false;
 	aux = name;
 
@@ -656,6 +656,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 						//pressedkey =  al_keycode_to_name(i);
 						name[j] = *aux;
 						j++;
+						name[j] = '\0';
 						al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA / 2, ALTURA_TELA / 2, ALLEGRO_ALIGN_CENTRE, "%s", name);
 						al_flip_display();
 						break;
@@ -705,8 +706,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 
 int main(void)
 {
-	int* gameboard = NULL;
-	int nextNumber;
+	int *gameboard = NULL, nextNumber, score;
 	ALLEGRO_DISPLAY* display = NULL;
 	ALLEGRO_FONT* font = NULL;
 	ALLEGRO_EVENT event;
@@ -760,13 +760,6 @@ int main(void)
 		return -1;
 	}
 
-	/*loginDisplay = al_create_display((LARGURA_TELA/2), (ALTURA_TELA/4) * 2);
-	if (!loginDisplay)
-	{
-		error_msg("Falha ao criar janela");
-		return -1;
-	}*/
-
 	loginScreen(playerPtr, display);
 
 	al_register_event_source(event_queue, al_get_mouse_event_source());
@@ -775,7 +768,7 @@ int main(void)
 
 	al_clear_to_color(al_map_rgb(255, 255, 255));
 	nextNumber = generateNextNumber(gameboard);
-	UpdateMatrix(gameboard, &nextNumber, playerPtr);
+	updateScreen(gameboard, &nextNumber, playerPtr);
 	//printNextNumber();
 	al_flip_display();
 
@@ -786,7 +779,7 @@ int main(void)
 		if (al_event_queue_is_empty(event_queue))
 		{
 			al_flip_display();
-			UpdateMatrix(gameboard, &nextNumber, playerPtr);
+			updateScreen(gameboard, &nextNumber, playerPtr);
 		}
 
 		switch (event.type)
@@ -813,7 +806,7 @@ int main(void)
 					moveUp(gameboard, false);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					UpdateMatrix(gameboard, &nextNumber, playerPtr);
+					updateScreen(gameboard, &nextNumber, playerPtr);
 				}
 
 				//if (!hasPossibleMove(gameboardadress))
@@ -830,7 +823,7 @@ int main(void)
 					moveDown(gameboard, false);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					UpdateMatrix(gameboard, &nextNumber, playerPtr);
+					updateScreen(gameboard, &nextNumber, playerPtr);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT)
@@ -840,7 +833,7 @@ int main(void)
 					moveRight(gameboard, false);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					UpdateMatrix(gameboard, &nextNumber, playerPtr);
+					updateScreen(gameboard, &nextNumber, playerPtr);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT)
@@ -850,7 +843,7 @@ int main(void)
 					moveLeft(gameboard, false);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					UpdateMatrix(gameboard, &nextNumber, playerPtr);
+					updateScreen(gameboard, &nextNumber, playerPtr);
 				}
 			}
 
