@@ -87,10 +87,10 @@ void updateScreen(int* matrix, int* nextNumber, Player* playerPtr)
 	al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA - 50, ALTURA_TELA - 75, ALLEGRO_ALIGN_LEFT, "%d", *nextNumber);
 
 	// Print Player's Name.
-	al_draw_textf(fontePlayer, al_map_rgb(0, 0, 0), LARGURA_TELA - (10 * (strnlen(playerPtr->name, 10))), 10, ALLEGRO_ALIGN_CENTRE, "Name");
-	al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA - (10 * (strnlen(playerPtr->name, strnlen(playerPtr->name, 10)))), 40, ALLEGRO_ALIGN_CENTRE, "%s", playerPtr->name);
-	al_draw_textf(fontePlayer, al_map_rgb(0, 0, 0), LARGURA_TELA - (10 * (strnlen(playerPtr->name, 10))), 100, ALLEGRO_ALIGN_CENTRE, "SCORE");
-	al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA - (10 * (strnlen(playerPtr->name, strnlen(playerPtr->name, 10)))), 130, ALLEGRO_ALIGN_CENTRE, "0");
+	al_draw_textf(fontePlayer, al_map_rgb(0, 0, 0), LARGURA_TELA - (15 * (strnlen(playerPtr->name, 10))), 10, ALLEGRO_ALIGN_CENTRE, "Name");
+	al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA - (15 * (strnlen(playerPtr->name, strnlen(playerPtr->name, 10)))), 40, ALLEGRO_ALIGN_CENTRE, "%s", playerPtr->name);
+	al_draw_textf(fontePlayer, al_map_rgb(0, 0, 0), LARGURA_TELA - (15 * (strnlen(playerPtr->name, 10))), 100, ALLEGRO_ALIGN_CENTRE, "SCORE");
+	al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA - (15 * (strnlen(playerPtr->name, strnlen(playerPtr->name, 10)))), 130, ALLEGRO_ALIGN_CENTRE, "0");
 
 	al_flip_display();
 }
@@ -191,7 +191,7 @@ bool moveUp(int* matrix, bool isAtest)
 	return false;
 }
 
-bool moveDown(int* matrix, bool isAtest) // Check This!
+bool moveDown(int* matrix, bool isAtest)
 {
 	int i, j, offset, belowLine, thirdline;
 	for (i = (SIZE - 2); i > -1; i--)
@@ -201,7 +201,7 @@ bool moveDown(int* matrix, bool isAtest) // Check This!
 			offset = i * SIZE + j;
 			belowLine = offset + SIZE;
 
-			if (i == (SIZE - 2)) // ELE CAI ALGUMA VEZ AQUI?
+			if (i == (SIZE - 2))
 			{
 				if ((matrix)[offset] != -1)
 				{
