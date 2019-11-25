@@ -16,7 +16,7 @@
 typedef struct
 {
 	char name[10];
-	int score, highScore;
+	int score;
 } Player;
 
 void error_msg(char* text)
@@ -70,10 +70,11 @@ int* createMatrix()
 	return gameboard;
 }
 
-void UpdateMatrix(int* matrix, int* nextNumber)
+void UpdateMatrix(int* matrix, int* nextNumber, Player* playerPtr)
 {
 	int i, j;
-	ALLEGRO_FONT* fonte = al_load_font("arial.ttf", 48, 0);
+	ALLEGRO_FONT* fonte = al_load_font("arial.ttf", 42, 0);
+	ALLEGRO_FONT* fontePlayer = al_load_font("arial.ttf", 20, 0);
 	al_clear_to_color(al_map_rgb(255, 255, 255));
 
 	for (i = 0; i < SIZE; i++)
@@ -82,13 +83,20 @@ void UpdateMatrix(int* matrix, int* nextNumber)
 			al_draw_textf(fonte, al_map_rgb(0, 0, 0), (LARGURA_TELA / (SIZE * 2)) * j, (ALTURA_TELA / (SIZE * 2)) * i, ALLEGRO_ALIGN_LEFT, "%d", matrix[i * SIZE + j]);
 	}
 
+	// Print Next Number on the Right Bottom Corner
 	al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA - 50, ALTURA_TELA - 75, ALLEGRO_ALIGN_LEFT, "%d", *nextNumber);
+
+	// Print Player's Name.
+	al_draw_textf(fontePlayer, al_map_rgb(0, 0, 0), LARGURA_TELA - (10 * (strnlen(playerPtr->name, 10))), 10, ALLEGRO_ALIGN_CENTRE, "Name");
+	al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA - (10 * (strnlen(playerPtr->name, strnlen(playerPtr->name, 10)))), 40, ALLEGRO_ALIGN_CENTRE, "%s", playerPtr->name);
+	al_draw_textf(fontePlayer, al_map_rgb(0, 0, 0), LARGURA_TELA - (10 * (strnlen(playerPtr->name, 10))), 100, ALLEGRO_ALIGN_CENTRE, "SCORE");
+	al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA - (10 * (strnlen(playerPtr->name, strnlen(playerPtr->name, 10)))), 130, ALLEGRO_ALIGN_CENTRE, "0");
 
 	al_flip_display();
 }
 
 // Se der tempo, colocar todos os MOVE na mesma função e enviar a tecla apertada como parâmetro.
-bool moveUp(int* matrix, bool test)
+bool moveUp(int* matrix, bool isAtest)
 {
 	int i, j, offset, aboveLine, thirdline;
 	for (i = 1; i < SIZE; i++)
@@ -106,7 +114,7 @@ bool moveUp(int* matrix, bool test)
 				{
 					if ((((matrix)[aboveLine]) == 0) && (((matrix)[offset]) != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[aboveLine]) = ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -117,7 +125,7 @@ bool moveUp(int* matrix, bool test)
 
 					else if ((matrix)[aboveLine] + (matrix)[offset] == 3)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[aboveLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -128,7 +136,7 @@ bool moveUp(int* matrix, bool test)
 
 					else if (((matrix)[offset] > 2) && ((matrix)[aboveLine] == ((matrix)[offset])))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[aboveLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -146,7 +154,7 @@ bool moveUp(int* matrix, bool test)
 				{
 					if (((matrix)[aboveLine] == 0) && ((matrix)[offset] != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[aboveLine]) = ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -157,7 +165,7 @@ bool moveUp(int* matrix, bool test)
 
 					else if (((matrix)[aboveLine] + (matrix)[offset] == 3) && ((matrix)[thirdline] != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[aboveLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -167,7 +175,7 @@ bool moveUp(int* matrix, bool test)
 					}
 					else if (((matrix)[offset] > 2) && ((matrix)[aboveLine] == ((matrix)[offset])) && ((matrix)[thirdline] != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[aboveLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -183,7 +191,7 @@ bool moveUp(int* matrix, bool test)
 	return false;
 }
 
-bool moveDown(int* matrix, bool test) // Check This!
+bool moveDown(int* matrix, bool isAtest) // Check This!
 {
 	int i, j, offset, belowLine, thirdline;
 	for (i = (SIZE - 2); i > -1; i--)
@@ -199,7 +207,7 @@ bool moveDown(int* matrix, bool test) // Check This!
 				{
 					if ((matrix)[belowLine] == 0)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[belowLine]) = ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -209,7 +217,7 @@ bool moveDown(int* matrix, bool test) // Check This!
 					}
 					else if ((matrix)[belowLine] + (matrix)[offset] == 3)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[belowLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -220,7 +228,7 @@ bool moveDown(int* matrix, bool test) // Check This!
 					}
 					else if (((matrix)[offset] > 2) && ((matrix)[belowLine] == ((matrix)[offset])))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[belowLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -239,7 +247,7 @@ bool moveDown(int* matrix, bool test) // Check This!
 				{
 					if ((matrix)[belowLine] == 0)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[belowLine]) = ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -250,7 +258,7 @@ bool moveDown(int* matrix, bool test) // Check This!
 
 					else if (((matrix)[belowLine] + (matrix)[offset] == 3) && ((matrix)[thirdline] != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[belowLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -260,7 +268,7 @@ bool moveDown(int* matrix, bool test) // Check This!
 					}
 					else if (((matrix)[offset] > 2) && ((matrix)[belowLine] == ((matrix)[offset])) && ((matrix)[thirdline] != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[belowLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -276,7 +284,7 @@ bool moveDown(int* matrix, bool test) // Check This!
 	return false;
 }
 
-bool moveLeft(int* matrix, bool test)
+bool moveLeft(int* matrix, bool isAtest)
 {
 	int i, j, offset, leftLine, thirdline;
 	for (i = 1; i < SIZE; i++)
@@ -293,7 +301,7 @@ bool moveLeft(int* matrix, bool test)
 				{
 					if ((matrix)[leftLine] == 0)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[leftLine]) = ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -303,7 +311,7 @@ bool moveLeft(int* matrix, bool test)
 					}
 					else if ((matrix)[leftLine] + (matrix)[offset] == 3)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[leftLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -313,7 +321,7 @@ bool moveLeft(int* matrix, bool test)
 					}
 					else if (((matrix)[offset] > 2) && ((matrix)[leftLine] == ((matrix)[offset])))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[leftLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -332,7 +340,7 @@ bool moveLeft(int* matrix, bool test)
 				{
 					if ((matrix)[leftLine] == 0)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[leftLine]) = ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -343,7 +351,7 @@ bool moveLeft(int* matrix, bool test)
 
 					else if (((matrix)[leftLine] + (matrix)[offset] == 3) && ((matrix)[thirdline] != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[leftLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -353,7 +361,7 @@ bool moveLeft(int* matrix, bool test)
 					}
 					else if (((matrix)[offset] > 2) && ((matrix)[leftLine] == ((matrix)[offset])) && ((matrix)[thirdline] != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[leftLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -369,7 +377,7 @@ bool moveLeft(int* matrix, bool test)
 	return false;
 }
 
-bool moveRight(int* matrix, bool test)
+bool moveRight(int* matrix, bool isAtest)
 {
 	int i, j, offset, rightLine, thirdline;
 	for (i = (SIZE - 2); i > -1; i--)
@@ -386,7 +394,7 @@ bool moveRight(int* matrix, bool test)
 				{
 					if ((matrix)[rightLine] == 0)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[rightLine]) = ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -396,7 +404,7 @@ bool moveRight(int* matrix, bool test)
 					}
 					else if ((matrix)[rightLine] + (matrix)[offset] == 3)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[rightLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -406,7 +414,7 @@ bool moveRight(int* matrix, bool test)
 					}
 					else if (((matrix)[offset] > 2) && ((matrix)[rightLine] == ((matrix)[offset])))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[rightLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -425,7 +433,7 @@ bool moveRight(int* matrix, bool test)
 				{
 					if ((matrix)[rightLine] == 0)
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[rightLine]) = ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -436,7 +444,7 @@ bool moveRight(int* matrix, bool test)
 
 					else if (((matrix)[rightLine] + (matrix)[offset] == 3) && ((matrix)[thirdline] != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[rightLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -446,7 +454,7 @@ bool moveRight(int* matrix, bool test)
 					}
 					else if (((matrix)[offset] > 2) && ((matrix)[rightLine] == ((matrix)[offset])) && ((matrix)[thirdline] != 0))
 					{
-						if (!test)
+						if (!isAtest)
 						{
 							((matrix)[rightLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
@@ -608,11 +616,13 @@ int generateNextNumber(int* matrix)
 	return nextNumber;
 }
 
-void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
+void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)	
 {
 	ALLEGRO_EVENT event;
-	int namecont = 0;
-	int i;
+	int namecont = 0, i;
+	char j = 0, name[10], *aux = NULL, *pressedkey = NULL;
+	bool leave = false;
+	aux = name;
 
 	ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
 
@@ -635,37 +645,61 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 
 		if (event.type == ALLEGRO_EVENT_KEY_CHAR) 
 		{
-			for (i = ALLEGRO_KEY_A; i < ALLEGRO_KEY_Z; i++)
+			if (j < 10)
 			{
-				if (event.keyboard.keycode == i)
+				for (i = ALLEGRO_KEY_A; i < ALLEGRO_KEY_Z; i++)
 				{
-					al_clear_to_color(al_map_rgb(255, 255, 0));
-					namecont++;
-					char *pressedKey =  al_keycode_to_name(i);
-					al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA/2, ALTURA_TELA/2, ALLEGRO_ALIGN_CENTRE, "%c", *pressedKey);
-					al_flip_display();
-					break;
+					if (event.keyboard.keycode == i)
+					{
+						al_clear_to_color(al_map_rgb(255, 255, 0));
+						aux = al_keycode_to_name(i);
+						//pressedkey =  al_keycode_to_name(i);
+						name[j] = *aux;
+						j++;
+						al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA / 2, ALTURA_TELA / 2, ALLEGRO_ALIGN_CENTRE, "%s", name);
+						al_flip_display();
+						break;
+					}
 				}
+
+
+				/*switch (event.keyboard.keycode) {
+				case ALLEGRO_KEY_ENTER:
+					al_clear_to_color(al_map_rgb(0, 0, 255));
+					break;
+				case ALLEGRO_KEY_BACKSPACE:
+					al_clear_to_color(al_map_rgb(255, 0, 0));
+					break;
+				case ALLEGRO_KEY_DELETE:
+					al_clear_to_color(al_map_rgb(255, 255, 0));
+					break;
+				default:
+					al_clear_to_color(al_map_rgb(255, 0, 255));
+					break;
+				}*/
 			}
-
-
-			/*switch (event.keyboard.keycode) {
-			case ALLEGRO_KEY_ENTER:
-				al_clear_to_color(al_map_rgb(0, 0, 255));
-				break;
-			case ALLEGRO_KEY_BACKSPACE:
-				al_clear_to_color(al_map_rgb(255, 0, 0));
-				break;
-			case ALLEGRO_KEY_DELETE:
+			}
+		else if ((event.type == ALLEGRO_EVENT_KEY_DOWN) && (event.keyboard.keycode == ALLEGRO_KEY_ENTER))
+		{
+			strcpy_s(playerPtr->name, strlen(name) + 1, name);
+			leave = true;
+		}
+		else if ((event.type == ALLEGRO_EVENT_KEY_DOWN) && (event.keyboard.keycode == ALLEGRO_KEY_BACKSPACE))
+		{
+			if (j > 0)
+			{
+				j--;
+				name[j] = '\0';
+				//strcpy_s(playerPtr->name, strlen(name) + 1, name);
 				al_clear_to_color(al_map_rgb(255, 255, 0));
-				break;
-			default:
-				al_clear_to_color(al_map_rgb(255, 0, 255));
-				break;
-			}*/
+				al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA / 2, ALTURA_TELA / 2, ALLEGRO_ALIGN_CENTRE, "%s",name);
+				al_flip_display();
+				//break;
+			}
+			
 		}
 
-	} while (namecont < 10);
+	} while (!leave);
 
 }
 
@@ -741,7 +775,7 @@ int main(void)
 
 	al_clear_to_color(al_map_rgb(255, 255, 255));
 	nextNumber = generateNextNumber(gameboard);
-	UpdateMatrix(gameboard, &nextNumber);
+	UpdateMatrix(gameboard, &nextNumber, playerPtr);
 	//printNextNumber();
 	al_flip_display();
 
@@ -752,7 +786,7 @@ int main(void)
 		if (al_event_queue_is_empty(event_queue))
 		{
 			al_flip_display();
-			UpdateMatrix(gameboard, &nextNumber);
+			UpdateMatrix(gameboard, &nextNumber, playerPtr);
 		}
 
 		switch (event.type)
@@ -779,7 +813,7 @@ int main(void)
 					moveUp(gameboard, false);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					UpdateMatrix(gameboard, &nextNumber);
+					UpdateMatrix(gameboard, &nextNumber, playerPtr);
 				}
 
 				//if (!hasPossibleMove(gameboardadress))
@@ -796,7 +830,7 @@ int main(void)
 					moveDown(gameboard, false);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					UpdateMatrix(gameboard, &nextNumber);
+					UpdateMatrix(gameboard, &nextNumber, playerPtr);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT)
@@ -806,7 +840,7 @@ int main(void)
 					moveRight(gameboard, false);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					UpdateMatrix(gameboard, &nextNumber);
+					UpdateMatrix(gameboard, &nextNumber, playerPtr);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT)
@@ -816,7 +850,7 @@ int main(void)
 					moveLeft(gameboard, false);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					UpdateMatrix(gameboard, &nextNumber);
+					UpdateMatrix(gameboard, &nextNumber, playerPtr);
 				}
 			}
 
