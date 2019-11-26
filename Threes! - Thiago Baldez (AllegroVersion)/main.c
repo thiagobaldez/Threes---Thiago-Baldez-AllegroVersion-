@@ -1,3 +1,16 @@
+/*	TODO: Continuar arrumando os If's novos dos move() - (Seguir exemplo da MoveUp())
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *	by: Thiago da Silva Baldez
+ *				2019
+ *
+ */
+
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
@@ -127,9 +140,13 @@ bool moveUp(int* matrix, bool isAtest, int* score)
 					{
 						if (!isAtest)
 						{
+							if(((matrix)[aboveLine] != 0) && ((matrix)[offset] != 0))
+								(*score) += 3;
+
 							((matrix)[aboveLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
-							(*score) += ((matrix)[aboveLine]);
+							//(*score) += ((matrix)[aboveLine]);
+
 						}
 						else
 							return true;
@@ -169,9 +186,12 @@ bool moveUp(int* matrix, bool isAtest, int* score)
 					{
 						if (!isAtest)
 						{
+							if (((matrix)[aboveLine] != 0) && ((matrix)[offset] != 0))
+								(*score) += 3;
+
 							((matrix)[aboveLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
-							(*score) += ((matrix)[aboveLine]);
+							//(*score) += ((matrix)[aboveLine]);
 						}
 						else
 							return true;
@@ -223,9 +243,12 @@ bool moveDown(int* matrix, bool isAtest, int* score)
 					{
 						if (!isAtest)
 						{
+							if (((matrix)[belowLine] != 0) && ((matrix)[offset] != 0))
+								(*score) += 3;
+
 							((matrix)[belowLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
-							(*score) += ((matrix)[belowLine]);
+							//(*score) += ((matrix)[belowLine]);
 						}
 						else
 							return true;
@@ -266,9 +289,12 @@ bool moveDown(int* matrix, bool isAtest, int* score)
 					{
 						if (!isAtest)
 						{
+							if (((matrix)[belowLine] != 0) && ((matrix)[offset] != 0))
+								(*score) += 3;
+
 							((matrix)[belowLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
-							(*score) += ((matrix)[belowLine]);
+							//(*score) += ((matrix)[belowLine]);
 						}
 						else
 							return true;
