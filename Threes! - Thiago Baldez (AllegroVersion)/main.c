@@ -1,4 +1,4 @@
-/*	TODO: Continuar arrumando os If's novos dos move() - (Seguir exemplo da MoveUp())
+/* TODO: 
  *
  *
  *
@@ -8,7 +8,6 @@
  *
  *	by: Thiago da Silva Baldez - All Rights Reserved.
  *				2019
- *
  */
 
 #include <allegro5/allegro.h>
@@ -347,9 +346,12 @@ bool moveLeft(int* matrix, bool isAtest, int* score)
 					{
 						if (!isAtest)
 						{
+							if (((matrix)[leftLine] != 0) && ((matrix)[offset] != 0))
+								(*score) += 3;
+
 							((matrix)[leftLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
-							(*score) += ((matrix)[leftLine]);
+							//(*score) += ((matrix)[leftLine]);
 						}
 						else
 							return true;
@@ -389,9 +391,12 @@ bool moveLeft(int* matrix, bool isAtest, int* score)
 					{
 						if (!isAtest)
 						{
+							if (((matrix)[leftLine] != 0) && ((matrix)[offset] != 0))
+								(*score) += 3;
+
 							((matrix)[leftLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
-							(*score) += ((matrix)[leftLine]);
+							//(*score) += ((matrix)[leftLine]);
 						}
 						else
 							return true;
@@ -444,9 +449,12 @@ bool moveRight(int* matrix, bool isAtest, int* score)
 					{
 						if (!isAtest)
 						{
+							if (((matrix)[rightLine] != 0) && ((matrix)[offset] != 0))
+								(*score) += 3;
+
 							((matrix)[rightLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
-							(*score) += ((matrix)[rightLine]);
+							//(*score) += ((matrix)[rightLine]);
 						}
 						else
 							return true;
@@ -486,9 +494,12 @@ bool moveRight(int* matrix, bool isAtest, int* score)
 					{
 						if (!isAtest)
 						{
+							if (((matrix)[rightLine] != 0) && ((matrix)[offset] != 0))
+								(*score) += 3;
+
 							((matrix)[rightLine]) += ((matrix)[offset]);
 							((matrix)[offset]) = 0;
-							(*score) += ((matrix)[rightLine]);
+							//(*score) += ((matrix)[rightLine]);
 						}
 						else
 							return true;
@@ -689,7 +700,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 		{
 			if (j < 10)
 			{
-				for (i = ALLEGRO_KEY_A; i < ALLEGRO_KEY_Z; i++)
+				for (i = ALLEGRO_KEY_A; i <= ALLEGRO_KEY_Z; i++)
 				{
 					if (event.keyboard.keycode == i)
 					{
@@ -739,7 +750,6 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 				al_flip_display();
 				//break;
 			}
-			
 		}
 
 	} while (!leave);
@@ -748,7 +758,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 
 int main(void)
 {
-	int *gameboard = NULL, nextNumber, score = 0, *scorePtr;
+	int *gameboard = NULL, nextNumber, score = 0, *scorePtr = NULL;
 	ALLEGRO_DISPLAY* display = NULL;
 	ALLEGRO_FONT* font = NULL;
 	ALLEGRO_EVENT event;
@@ -811,19 +821,21 @@ int main(void)
 
 	al_clear_to_color(al_map_rgb(255, 255, 255));
 	nextNumber = generateNextNumber(gameboard);
-	updateScreen(gameboard, &nextNumber, playerPtr, &score);
-	//printNextNumber();
-	al_flip_display();
+	//updateScreen(gameboard, &nextNumber, playerPtr, &score);
+	//al_flip_display();
 
 	while (1) // GameLoop
 	{
+		//al_flip_display();
 		al_wait_for_event(event_queue, &event);
+		updateScreen(gameboard, &nextNumber, playerPtr, &score);
+		//al_flip_display();
 
-		if (al_event_queue_is_empty(event_queue))
+		/*if (al_event_queue_is_empty(event_queue))
 		{
 			al_flip_display();
 			updateScreen(gameboard, &nextNumber, playerPtr, &score);
-		}
+		}*/
 
 		switch (event.type)
 		{
@@ -852,12 +864,12 @@ int main(void)
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
 				}
 
-				//if (!hasPossibleMove(gameboardadress))
-				//{
-				//	//gameEnd();
-				//	//al_clear_to_color(al_map_rgb(255, 0, 0));
-				//	//al_flip_display();
-				//}
+				if (!hasPossibleMove(gameboard, scorePtr))
+				{
+					//gameEnd();
+					al_clear_to_color(al_map_rgb(255, 0, 0));
+					al_flip_display();
+				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
 			{
@@ -872,10 +884,12 @@ int main(void)
 			else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT)
 			{
 				if (moveRight(gameboard, true, &score))
+				{
 					moveRight(gameboard, false, &score);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
+				}	
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT)
 			{
