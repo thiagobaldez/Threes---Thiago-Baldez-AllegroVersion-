@@ -6,7 +6,7 @@
  *
  *
  *
- *	by: Thiago da Silva Baldez
+ *	by: Thiago da Silva Baldez - All Rights Reserved.
  *				2019
  *
  */
