@@ -106,6 +106,9 @@ void updateScreen(int* matrix, int* nextNumber, Player* playerPtr, int *score)
 	al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA - (15 * (strnlen(playerPtr->name, strnlen(playerPtr->name, 10)))), 130, ALLEGRO_ALIGN_CENTRE, "%d", *score);
 
 	al_flip_display();
+
+	al_destroy_font(fonte);
+	al_destroy_font(fontePlayer);
 }
 
 // Se der tempo, colocar todos os MOVE na mesma função e enviar a tecla apertada como parâmetro.
@@ -674,7 +677,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 {
 	ALLEGRO_EVENT event;
 	int namecont = 0, i;
-	char j = 0, name[11] = "\0", * aux = NULL;
+	char j = 0, name[11] = "\0\0\0\0\0\0\0\0\0\0", *aux = NULL;
 	bool leave = false;
 	aux = name;
 
@@ -755,6 +758,8 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 
 	} while (!leave);
 
+	al_destroy_font(fonte);
+	al_destroy_event_queue(event_queue);
 }
 
 int main(void)
