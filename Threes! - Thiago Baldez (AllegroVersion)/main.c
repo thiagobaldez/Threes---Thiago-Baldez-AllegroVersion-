@@ -538,7 +538,7 @@ bool hasPossibleMove(int* matrix, int* score)
 		return false;
 }
 
-void addNumber(int* matrix, ALLEGRO_EVENT* button, int* nextNumber)
+void addNumber(int* matrix, int button, int* nextNumber)
 {
 	int i, j, emptyIndex = 0, offset, randAux, possibleIndex[SIZE];
 	time_t t;
@@ -641,7 +641,7 @@ void addNumber(int* matrix, ALLEGRO_EVENT* button, int* nextNumber)
 
 int generateNextNumber(int* matrix)
 {
-	int i, nextNumber, randIndex;
+	int nextNumber, randIndex;
 	time_t t;
 
 	srand((unsigned)time(&t));
@@ -674,7 +674,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 {
 	ALLEGRO_EVENT event;
 	int namecont = 0, i;
-	char j = 0, name[11], *aux = NULL;
+	char j = 0, name[11] = "\0", * aux = NULL;
 	bool leave = false;
 	aux = name;
 
@@ -707,7 +707,6 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 					{
 						al_clear_to_color(al_map_rgb(255, 255, 0));
 						aux = al_keycode_to_name(i);
-						//pressedkey =  al_keycode_to_name(i);
 						name[j] = *aux;
 						j++;
 						name[j] = '\0';
@@ -910,7 +909,7 @@ int main(void)
 				if (moveLeft(gameboard, true, &score))
 				{
 					moveLeft(gameboard, false, &score);
-					addNumber(gameboard, (int)event.keyboard.keycode, &nextNumber);
+					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
 				}
