@@ -826,10 +826,8 @@ int main(void)
 
 	while (1) // GameLoop
 	{
-		//al_flip_display();
 		al_wait_for_event(event_queue, &event);
-		updateScreen(gameboard, &nextNumber, playerPtr, &score);
-		//al_flip_display();
+		//updateScreen(gameboard, &nextNumber, playerPtr, &score);
 
 		/*if (al_event_queue_is_empty(event_queue))
 		{
@@ -880,6 +878,13 @@ int main(void)
 					nextNumber = generateNextNumber(gameboard);
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
 				}
+
+				if (!hasPossibleMove(gameboard, scorePtr))
+				{
+					//gameEnd();
+					al_clear_to_color(al_map_rgb(255, 0, 0));
+					al_flip_display();
+				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT)
 			{
@@ -889,7 +894,14 @@ int main(void)
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
-				}	
+				}
+
+				if (!hasPossibleMove(gameboard, scorePtr))
+				{
+					//gameEnd();
+					al_clear_to_color(al_map_rgb(255, 0, 0));
+					al_flip_display();
+				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT)
 			{
@@ -899,6 +911,13 @@ int main(void)
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
+				}
+
+				if (!hasPossibleMove(gameboard, scorePtr))
+				{
+					//gameEnd();
+					al_clear_to_color(al_map_rgb(255, 0, 0));
+					al_flip_display();
 				}
 			}
 
