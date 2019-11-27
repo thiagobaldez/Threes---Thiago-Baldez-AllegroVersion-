@@ -14,11 +14,12 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <allegro5\allegro_native_dialog.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <allegro5\allegro_native_dialog.h>
 #include <time.h>
 
 #define LARGURA_TELA 600
@@ -673,7 +674,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 {
 	ALLEGRO_EVENT event;
 	int namecont = 0, i;
-	char j = 0, name[11], *aux = NULL, *pressedkey = NULL;
+	char j = 0, name[11], *aux = NULL;
 	bool leave = false;
 	aux = name;
 
@@ -737,6 +738,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 		{
 			strcpy_s(playerPtr->name, strlen(name) + 1, name);
 			leave = true;
+			//break;
 		}
 		else if ((event.type == ALLEGRO_EVENT_KEY_DOWN) && (event.keyboard.keycode == ALLEGRO_KEY_BACKSPACE))
 		{
@@ -821,8 +823,8 @@ int main(void)
 
 	al_clear_to_color(al_map_rgb(255, 255, 255));
 	nextNumber = generateNextNumber(gameboard);
-	//updateScreen(gameboard, &nextNumber, playerPtr, &score);
-	//al_flip_display();
+	updateScreen(gameboard, &nextNumber, playerPtr, &score);
+	al_flip_display();
 
 	while (1) // GameLoop
 	{
@@ -908,7 +910,7 @@ int main(void)
 				if (moveLeft(gameboard, true, &score))
 				{
 					moveLeft(gameboard, false, &score);
-					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
+					addNumber(gameboard, (int)event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
 				}
