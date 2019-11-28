@@ -28,7 +28,7 @@
 
 typedef struct
 {
-	char name[11];
+	char name[10];
 	int score;
 } Player;
 
@@ -677,16 +677,10 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 {
 	ALLEGRO_EVENT event;
 	int namecont = 0, i;
-	char j = 0, name[11], *aux = NULL;
+	char j = 0, *aux = NULL;
 	bool leave;
-	aux = name;
-	
-	//memset(playerPtr->name, 0, sizeof(playerPtr->name));
-	//memset(name, 0, sizeof(name));
 
 	playerPtr->name[0] = '\0';
-	name[0] = '\0';
-
 	playerPtr->score = 0;
 
 	ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
@@ -719,10 +713,9 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 					{
 						al_clear_to_color(al_map_rgb(255, 255, 0));
 						aux = al_keycode_to_name(i);
-						name[j] = *aux;
+						playerPtr->name[j] = *aux;
 						j++;
-						name[j] = '\0';
-						al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA / 2, ALTURA_TELA / 2, ALLEGRO_ALIGN_CENTRE, "%s", name);
+						al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA / 2, ALTURA_TELA / 2, ALLEGRO_ALIGN_CENTRE, "%s", playerPtr->name);
 						al_flip_display();
 						break;
 					}
@@ -747,7 +740,6 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 		}
 		else if ((event.type == ALLEGRO_EVENT_KEY_DOWN) && (event.keyboard.keycode == ALLEGRO_KEY_ENTER))
 		{
-			strcpy_s(playerPtr->name, strlen(name)+1, name);
 			leave = true;
 			//break;
 		}
@@ -756,16 +748,14 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 			if (j > 0)
 			{
 				j--;
-				name[j] = '\0';
-				//strcpy_s(playerPtr->name, strlen(name) + 1, name);
+				playerPtr->name[j] = '\0';
 				al_clear_to_color(al_map_rgb(255, 255, 0));
-				al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA / 2, ALTURA_TELA / 2, ALLEGRO_ALIGN_CENTRE, "%s",name);
+				al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA / 2, ALTURA_TELA / 2, ALLEGRO_ALIGN_CENTRE, "%s", playerPtr->name);
 				al_flip_display();
-				//break;
 			}
 		}
 
-	} while (!leave || (name[0] == '\0'));
+	} while (!leave || (playerPtr->name[0] == '\0'));
 
 	al_destroy_font(fonte);
 	al_destroy_event_queue(event_queue);
