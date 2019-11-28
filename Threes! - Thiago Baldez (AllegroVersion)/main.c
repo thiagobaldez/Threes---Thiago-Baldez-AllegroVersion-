@@ -686,6 +686,8 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 	const char *aux = NULL;
 	bool leave;
 
+	memset(playerPtr->name, 0, sizeof(playerPtr->name));
+
 	playerPtr->name[0] = '\0';
 	playerPtr->score = 0;
 
@@ -771,12 +773,15 @@ void endGame(Player* playerPtr, ALLEGRO_DISPLAY* display, FILE* fileptr)
 	ALLEGRO_EVENT event;
 	ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
 	ALLEGRO_FONT* fonte = al_load_font("Arial/arial.ttf", 48, 0);
+	char name[10];
 
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 	al_register_event_source(event_queue, al_get_display_event_source(display));
 
-	fwrite(playerPtr, sizeof(Player), 1, fileptr);
+	//fwrite(playerPtr->name, sizeof(playerPtr->name), 1, fileptr);
+	//fwrite(playerPtr, sizeof(Player), 1, fileptr);
+	fprintf(fileptr, "%s %d", playerPtr->name, playerPtr->score);
 
 	al_clear_to_color(al_map_rgb(255, 0, 0));
 	al_flip_display();
@@ -849,7 +854,7 @@ int main()
 		return -1;
 	}
 
-	FILE* fileptr = fopen("Scoreboard.txt", "wb");
+	FILE* fileptr = fopen("Scoreboard.txt", "w+");
 	if (!fileptr)
 	{
 		printf("Error in creating file. Aborting.\n");
