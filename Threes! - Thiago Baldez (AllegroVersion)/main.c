@@ -10,6 +10,11 @@
  *				2019
  */
 
+#ifndef _CRT_SECURE_NO_WARNINGS
+	#define _CRT_SECURE_NO_WARNINGS
+#endif // !_CRT_SECURE_NO_WARNINGS
+
+
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
@@ -677,7 +682,8 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 {
 	ALLEGRO_EVENT event;
 	int namecont = 0, i;
-	char j = 0, *aux = NULL;
+	char j = 0;
+	const char *aux = NULL;
 	bool leave;
 
 	playerPtr->name[0] = '\0';
@@ -741,7 +747,6 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 		else if ((event.type == ALLEGRO_EVENT_KEY_DOWN) && (event.keyboard.keycode == ALLEGRO_KEY_ENTER))
 		{
 			leave = true;
-			//break;
 		}
 		else if ((event.type == ALLEGRO_EVENT_KEY_DOWN) && (event.keyboard.keycode == ALLEGRO_KEY_BACKSPACE))
 		{
@@ -761,7 +766,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 	al_destroy_event_queue(event_queue);
 }
 
-void endGame(Player* playerPtr, ALLEGRO_DISPLAY* display)
+void endGame(Player* playerPtr, ALLEGRO_DISPLAY* display, FILE* fileptr)
 {
 	ALLEGRO_EVENT event;
 	ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
@@ -770,6 +775,8 @@ void endGame(Player* playerPtr, ALLEGRO_DISPLAY* display)
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 	al_register_event_source(event_queue, al_get_display_event_source(display));
+
+	fwrite(playerPtr, sizeof(Player), 1, fileptr);
 
 	al_clear_to_color(al_map_rgb(255, 0, 0));
 	al_flip_display();
@@ -794,6 +801,7 @@ int main()
 	ALLEGRO_EVENT event;
 	Player player, *playerPtr = NULL;
 	playerPtr = &player;
+
 
 	if (!al_init())
 	{
@@ -839,6 +847,13 @@ int main()
 		al_destroy_display(display);
 		error_msg("Falha ao carregar a Matriz do Jogo.");
 		return -1;
+	}
+
+	FILE* fileptr = fopen("Scoreboard.txt", "wb");
+	if (!fileptr)
+	{
+		printf("Error in creating file. Aborting.\n");
+		return -2;
 	}
 
 	loginScreen(&player, display);
@@ -893,7 +908,7 @@ int main()
 
 				if (!hasPossibleMove(gameboard, &player))
 				{
-					endGame(&player, display);
+					endGame(&player, display, fileptr);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
@@ -908,7 +923,7 @@ int main()
 
 				if (!hasPossibleMove(gameboard, &player))
 				{
-					endGame(&player, display);
+					endGame(&player, display, fileptr);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT)
@@ -923,7 +938,7 @@ int main()
 
 				if (!hasPossibleMove(gameboard, &player))
 				{
-					endGame(&player, display);
+					endGame(&player, display, fileptr);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT)
@@ -938,7 +953,7 @@ int main()
 
 				if (!hasPossibleMove(gameboard, &player))
 				{
-					endGame(&player, display);
+					endGame(&player, display, fileptr);
 				}
 			}
 
