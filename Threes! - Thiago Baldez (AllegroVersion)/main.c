@@ -86,8 +86,8 @@ int* createMatrix()
 void updateScreen(int* matrix, int* nextNumber, Player* playerPtr, int *score)
 {
 	int i, j;
-	ALLEGRO_FONT* fonte = al_load_font("arial.ttf", 42, 0);
-	ALLEGRO_FONT* fontePlayer = al_load_font("arial.ttf", 20, 0);
+	ALLEGRO_FONT* fonte = al_load_font("Arial/arial.ttf", 42, 0);
+	ALLEGRO_FONT* fontePlayer = al_load_font("Arial/arial.ttf", 20, 0);
 	al_clear_to_color(al_map_rgb(255, 255, 255));
 
 	for (i = 0; i < SIZE; i++)
@@ -683,7 +683,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 
 	ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
 
-	ALLEGRO_FONT* fonte = al_load_font("arial.ttf", 48, 0);
+	ALLEGRO_FONT* fonte = al_load_font("Arial/arial.ttf", 48, 0);
 
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -787,7 +787,7 @@ int main(void)
 		return -1;
 	}
 
-	font = al_load_font("arial.ttf", 32, 0);
+	font = al_load_font("Arial/arial.ttf", 32, 0);
 	if (!font)
 	{
 		error_msg("Falha ao carregar fonte");
@@ -868,7 +868,7 @@ int main(void)
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
 				}
 
-				if (!hasPossibleMove(gameboard, scorePtr))
+				if (!hasPossibleMove(gameboard, &score))
 				{
 					//gameEnd();
 					al_clear_to_color(al_map_rgb(255, 0, 0));
@@ -885,7 +885,7 @@ int main(void)
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
 				}
 
-				if (!hasPossibleMove(gameboard, scorePtr))
+				if (!hasPossibleMove(gameboard, &score))
 				{
 					//gameEnd();
 					al_clear_to_color(al_map_rgb(255, 0, 0));
@@ -902,7 +902,7 @@ int main(void)
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
 				}
 
-				if (!hasPossibleMove(gameboard, scorePtr))
+				if (!hasPossibleMove(gameboard, &score))
 				{
 					//gameEnd();
 					al_clear_to_color(al_map_rgb(255, 0, 0));
@@ -919,7 +919,7 @@ int main(void)
 					updateScreen(gameboard, &nextNumber, playerPtr, &score);
 				}
 
-				if (!hasPossibleMove(gameboard, scorePtr))
+				if (!hasPossibleMove(gameboard, &score))
 				{
 					//gameEnd();
 					al_clear_to_color(al_map_rgb(255, 0, 0));
