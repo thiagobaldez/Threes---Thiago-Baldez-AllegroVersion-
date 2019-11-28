@@ -28,8 +28,8 @@
 
 typedef struct
 {
-	char name[10];
-	int score = 0;
+	char name[11];
+	int score;
 } Player;
 
 void error_msg(char* text)
@@ -83,7 +83,7 @@ int* createMatrix()
 	return gameboard;
 }
 
-void updateScreen(int* matrix, int* nextNumber, Player* playerPtr)
+void updateScreen(int* matrix, int* nextNumber, Player *playerPtr)
 {
 	int i, j;
 	ALLEGRO_FONT* fonte = al_load_font("Arial/arial.ttf", 42, 0);
@@ -529,13 +529,13 @@ bool moveRight(int* matrix, bool isAtest, Player* playerPtr)
 
 bool hasPossibleMove(int* matrix, Player* playerPtr)
 {
-	if (moveUp(matrix, true, playerPtr->score))
+	if (moveUp(matrix, true, playerPtr))
 		return true;
-	else if (moveDown(matrix, true, playerPtr->score))
+	else if (moveDown(matrix, true, playerPtr))
 		return true;
-	else if (moveLeft(matrix, true, playerPtr->score))
+	else if (moveLeft(matrix, true, playerPtr))
 		return true;
-	else if (moveRight(matrix, true, playerPtr->score))
+	else if (moveRight(matrix, true, playerPtr))
 		return true;
 	else
 		return false;
@@ -681,7 +681,13 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 	bool leave;
 	aux = name;
 	
-	memset(name, 0, sizeof(name));
+	//memset(playerPtr->name, 0, sizeof(playerPtr->name));
+	//memset(name, 0, sizeof(name));
+
+	playerPtr->name[0] = '\0';
+	name[0] = '\0';
+
+	playerPtr->score = 0;
 
 	ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
 
@@ -715,7 +721,7 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 						aux = al_keycode_to_name(i);
 						name[j] = *aux;
 						j++;
-						//name[j] = '\0';
+						name[j] = '\0';
 						al_draw_textf(fonte, al_map_rgb(0, 0, 0), LARGURA_TELA / 2, ALTURA_TELA / 2, ALLEGRO_ALIGN_CENTRE, "%s", name);
 						al_flip_display();
 						break;
@@ -738,10 +744,10 @@ void loginScreen(Player* playerPtr, ALLEGRO_DISPLAY* display)
 					break;
 				}*/
 			}
-			}
+		}
 		else if ((event.type == ALLEGRO_EVENT_KEY_DOWN) && (event.keyboard.keycode == ALLEGRO_KEY_ENTER))
 		{
-			strcpy_s(playerPtr->name, strlen(name) + 1, name);
+			strcpy_s(playerPtr->name, strlen(name)+1, name);
 			leave = true;
 			//break;
 		}
@@ -783,23 +789,21 @@ void endGame(Player* playerPtr, ALLEGRO_DISPLAY* display)
 	al_draw_textf(fonte, al_map_rgb(255, 255, 255), LARGURA_TELA / 2, (ALTURA_TELA / 2) + 75, ALLEGRO_ALIGN_CENTRE, "%d", playerPtr->score);
 	//al_draw_textf(fonte, al_map_rgb(255, 255, 255), LARGURA_TELA / 2, (ALTURA_TELA / 2) - 75, ALLEGRO_ALIGN_CENTRE, "Score");
 
-	while (1)
+	while(true)
 	{
 		al_flip_display();
 	}
 
 }
 
-int main(void)
+int main()
 {
-	int *gameboard = NULL, nextNumber,/* score = 0, */*scorePtr = NULL;
+	int* gameboard = NULL, nextNumber;
 	ALLEGRO_DISPLAY* display = NULL;
 	ALLEGRO_FONT* font = NULL;
 	ALLEGRO_EVENT event;
 	Player player, *playerPtr = NULL;
 	playerPtr = &player;
-	//scorePtr = &score;
-
 
 	if (!al_init())
 	{
@@ -847,7 +851,7 @@ int main(void)
 		return -1;
 	}
 
-	loginScreen(playerPtr, display);
+	loginScreen(&player, display);
 
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -855,18 +859,17 @@ int main(void)
 
 	al_clear_to_color(al_map_rgb(255, 255, 255));
 	nextNumber = generateNextNumber(gameboard);
-	updateScreen(gameboard, &nextNumber, playerPtr, playerPtr->score);
+	updateScreen(gameboard, &nextNumber, &player);
 	al_flip_display();
 
 	while (1) // GameLoop
 	{
 		al_wait_for_event(event_queue, &event);
-		//updateScreen(gameboard, &nextNumber, playerPtr, &score);
 
 		if (al_event_queue_is_empty(event_queue))
 		{
 			al_flip_display();
-			updateScreen(gameboard, &nextNumber, playerPtr, playerPtr->score);
+			updateScreen(gameboard, &nextNumber, &player);
 		}
 
 		switch (event.type)
@@ -890,62 +893,62 @@ int main(void)
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_UP)
 			{
-				if (moveUp(gameboard, true, playerPtr))
+				if (moveUp(gameboard, true, &player))
 				{
-					moveUp(gameboard, false, playerPtr);
+					moveUp(gameboard, false, &player);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					updateScreen(gameboard, &nextNumber, playerPtr, playerPtr);
+					updateScreen(gameboard, &nextNumber, &player);
 				}
 
-				if (!hasPossibleMove(gameboard, playerPtr))
+				if (!hasPossibleMove(gameboard, &player))
 				{
-					endGame(playerPtr, display, playerPtr);
+					endGame(&player, display);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
 			{
-				if (moveDown(gameboard, true, playerPtr))
+				if (moveDown(gameboard, true, &player))
 				{
-					moveDown(gameboard, false, playerPtr);
+					moveDown(gameboard, false, &player);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					updateScreen(gameboard, &nextNumber, playerPtr, playerPtr);
+					updateScreen(gameboard, &nextNumber, &player);
 				}
 
-				if (!hasPossibleMove(gameboard, playerPtr))
+				if (!hasPossibleMove(gameboard, &player))
 				{
-					endGame(playerPtr, display, playerPtr);
+					endGame(&player, display);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT)
 			{
-				if (moveRight(gameboard, true, playerPtr))
+				if (moveRight(gameboard, true, &player))
 				{
-					moveRight(gameboard, false, playerPtr);
+					moveRight(gameboard, false, &player);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					updateScreen(gameboard, &nextNumber, playerPtr, playerPtr);
+					updateScreen(gameboard, &nextNumber, &player);
 				}
 
-				if (!hasPossibleMove(gameboard, playerPtr))
+				if (!hasPossibleMove(gameboard, &player))
 				{
-					endGame(playerPtr, display, playerPtr);
+					endGame(&player, display);
 				}
 			}
 			else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT)
 			{
-				if (moveLeft(gameboard, true, playerPtr))
+				if (moveLeft(gameboard, true, &player))
 				{
-					moveLeft(gameboard, false, playerPtr);
+					moveLeft(gameboard, false, &player);
 					addNumber(gameboard, event.keyboard.keycode, &nextNumber);
 					nextNumber = generateNextNumber(gameboard);
-					updateScreen(gameboard, &nextNumber, playerPtr, playerPtr);
+					updateScreen(gameboard, &nextNumber, &player);
 				}
 
-				if (!hasPossibleMove(gameboard, playerPtr))
+				if (!hasPossibleMove(gameboard, &player))
 				{
-					endGame(playerPtr, display, playerPtr);
+					endGame(&player, display);
 				}
 			}
 
